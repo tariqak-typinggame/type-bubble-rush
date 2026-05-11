@@ -26,8 +26,6 @@ height:100vh;
 color:white;
 }
 
-/* CANVAS */
-
 canvas{
 position:absolute;
 top:0;
@@ -51,8 +49,6 @@ color:#fff;
 font-weight:600;
 }
 
-/* TOP ADS */
-
 .top-ads{
 top:10px;
 left:50%;
@@ -64,8 +60,6 @@ display:flex;
 align-items:center;
 justify-content:center;
 }
-
-/* SIDE ADS */
 
 .left-ads{
 left:15px;
@@ -97,30 +91,21 @@ z-index:10;
 padding:130px 20px 20px;
 }
 
-.topbar{
-display:flex;
-justify-content:center;
-align-items:center;
-flex-wrap:wrap;
-gap:15px;
-}
-
 .logo{
 font-size:2rem;
 font-weight:700;
 background:linear-gradient(to right,#00e5ff,#00ff99);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-width:100%;
 text-align:center;
-margin-bottom:15px;
+margin-bottom:20px;
 }
 
 .stats{
 display:flex;
+justify-content:center;
 gap:15px;
 flex-wrap:wrap;
-justify-content:center;
 }
 
 .card{
@@ -140,7 +125,7 @@ margin-top:5px;
 color:#00ffb7;
 }
 
-/* CENTER */
+/* MENU */
 
 .center-box{
 position:absolute;
@@ -264,7 +249,7 @@ background:#00ff99;
 background:#00d9ff;
 }
 
-/* LEVEL UP */
+/* LEVEL */
 
 .levelup{
 position:absolute;
@@ -315,17 +300,13 @@ font-size:14px;
 padding-top:90px;
 }
 
-.center-box{
-top:60%;
-}
-
 .title{
 font-size:2.8rem;
 }
 
 }
 
-/* EXTRA SMALL MOBILE */
+/* SMALL MOBILE */
 
 @media(max-width:600px){
 
@@ -335,10 +316,6 @@ display:none;
 
 .ui{
 padding-top:20px;
-}
-
-.center-box{
-top:50%;
 }
 
 .title{
@@ -393,8 +370,6 @@ padding:15px;
 
 <div class="ui">
 
-<div class="topbar">
-
 <div class="logo">
 ⌨️ Type Bubble Rush
 </div>
@@ -425,9 +400,7 @@ Accuracy
 
 </div>
 
-</div>
-
-<!-- START MENU -->
+<!-- START -->
 
 <div class="center-box" id="menu">
 
@@ -459,7 +432,7 @@ autocomplete="off"
 
 </div>
 
-<!-- LEVEL UP -->
+<!-- LEVEL -->
 
 <div class="levelup" id="levelup">
 LEVEL UP!
@@ -518,19 +491,23 @@ let startTime;
 
 let bubbleSpeed = 1;
 
-/* SAFE PLAY AREA */
+/* SAFE LANES */
 
-function getSafeX(){
+const lanes = [];
 
-let minX = 120;
-let maxX = canvas.width - 120;
+function generateLanes(){
 
-/* DESKTOP SAFE AREA */
+lanes.length = 0;
+
+let startX = 120;
+let endX = canvas.width - 120;
+
+/* DESKTOP */
 
 if(window.innerWidth > 1200){
 
-minX = 420;
-maxX = canvas.width - 420;
+startX = 420;
+endX = canvas.width - 420;
 
 }
 
@@ -538,8 +515,8 @@ maxX = canvas.width - 420;
 
 else if(window.innerWidth > 900){
 
-minX = 120;
-maxX = canvas.width - 120;
+startX = 140;
+endX = canvas.width - 140;
 
 }
 
@@ -547,16 +524,29 @@ maxX = canvas.width - 120;
 
 else{
 
-minX = 80;
-maxX = canvas.width - 80;
+startX = 90;
+endX = canvas.width - 90;
 
 }
 
-return Math.random() * (maxX - minX) + minX;
+const totalLanes = 5;
+
+const laneWidth =
+(endX - startX) / totalLanes;
+
+for(let i=0;i<totalLanes;i++){
+
+lanes.push(
+startX + laneWidth * i + laneWidth/2
+);
 
 }
 
-/* SAFE TOP LIMIT */
+}
+
+generateLanes();
+
+/* SAFE TOP */
 
 function getSafeTopLimit(){
 
@@ -576,13 +566,15 @@ return 120;
 
 }
 
+/* BUBBLE */
+
 class Bubble{
 
-constructor(word){
+constructor(word,x){
 
 this.word = word;
 
-this.x = getSafeX();
+this.x = x;
 
 this.y = canvas.height + 100;
 
@@ -647,20 +639,64 @@ function spawnBubble(){
 
 if(!gameRunning) return;
 
+/* FREE LANES */
+
+const freeLanes = lanes.filter(lane => {
+
+return !bubbles.some(bubble => {
+
+return Math.abs(bubble.x - lane) < 20
+&& Math.abs(bubble.y - canvas.height) < 180;
+
+});
+
+});
+
+if(freeLanes.length === 0) return;
+
+const lane =
+freeLanes[
+Math.floor(Math.random()*freeLanes.length)
+];
+
 const word =
 words[Math.floor(Math.random()*words.length)];
 
-bubbles.push(new Bubble(word));
+bubbles.push(
+new Bubble(word,lane)
+);
+
+/* EXTRA LEVEL BUBBLES */
 
 const extra =
 Math.floor(level / 3);
 
 for(let i=0;i<extra;i++){
 
+const remainingLanes = lanes.filter(l => {
+
+return !bubbles.some(b => {
+
+return Math.abs(b.x - l) < 20
+&& Math.abs(b.y - canvas.height) < 180;
+
+});
+
+});
+
+if(remainingLanes.length === 0) return;
+
+const randomLane =
+remainingLanes[
+Math.floor(Math.random()*remainingLanes.length)
+];
+
 const w =
 words[Math.floor(Math.random()*words.length)];
 
-bubbles.push(new Bubble(w));
+bubbles.push(
+new Bubble(w,randomLane)
+);
 
 }
 
@@ -677,7 +713,8 @@ canvas.width,
 canvas.height
 );
 
-const safeTop = getSafeTopLimit();
+const safeTop =
+getSafeTopLimit();
 
 for(let i=0;i<bubbles.length;i++){
 
@@ -820,7 +857,9 @@ document.getElementById('levelup');
 lvl.style.display='block';
 
 setTimeout(()=>{
+
 lvl.style.display='none';
+
 },1200);
 
 }
@@ -875,6 +914,8 @@ window.addEventListener('resize',()=>{
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+generateLanes();
 
 });
 
