@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Type Bubble Rush</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+overflow:hidden;
+background:
+radial-gradient(circle at top,#182848,#0f172a,#020617);
+height:100vh;
+color:white;
+}
+
+/* CANVAS */
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+}
+
+/* ADS */
+
+.ads-box{
+position:absolute;
+background:rgba(255,255,255,0.08);
+border:1px dashed rgba(255,255,255,0.2);
+backdrop-filter:blur(10px);
+border-radius:20px;
+padding:20px;
+text-align:center;
+z-index:20;
+color:#fff;
+font-weight:600;
+}
+
+/* TOP ADS */
+
+.top-ads{
+top:10px;
+left:50%;
+transform:translateX(-50%);
+width:728px;
+max-width:90%;
+height:90px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* SIDE ADS */
+
+.left-ads{
+left:15px;
+top:50%;
+transform:translateY(-50%);
+width:160px;
+height:600px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.right-ads{
+right:15px;
+top:50%;
+transform:translateY(-50%);
+width:160px;
+height:600px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* UI */
+
+.ui{
+position:relative;
+z-index:10;
+padding:130px 20px 20px;
+}
+
+.topbar{
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.logo{
+font-size:2rem;
+font-weight:700;
+background:linear-gradient(to right,#00e5ff,#00ff99);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+width:100%;
+text-align:center;
+margin-bottom:15px;
+}
+
+.stats{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+padding:15px 20px;
+border-radius:18px;
+min-width:120px;
+text-align:center;
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.card h2{
+font-size:1.8rem;
+margin-top:5px;
+color:#00ffb7;
+}
+
+/* CENTER */
+
+.center-box{
+position:absolute;
+top:55%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:20;
+text-align:center;
+width:90%;
+max-width:650px;
+}
+
+.title{
+font-size:4rem;
+font-weight:700;
+margin-bottom:20px;
+background:linear-gradient(to right,#00e5ff,#00ff99);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+font-size:1.2rem;
+color:#d6d6d6;
+line-height:1.8rem;
+margin-bottom:30px;
+}
+
+.start-btn{
+padding:18px 40px;
+font-size:1.2rem;
+font-weight:700;
+border:none;
+border-radius:18px;
+background:linear-gradient(135deg,#00ff99,#00d9ff);
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 0 25px rgba(0,255,153,0.5);
+}
+
+.start-btn:hover{
+transform:scale(1.05);
+}
+
+/* INPUT */
+
+.input-box{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+z-index:20;
+width:90%;
+max-width:600px;
+}
+
+input{
+width:100%;
+padding:18px 22px;
+font-size:1.2rem;
+border:none;
+outline:none;
+border-radius:20px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(15px);
+color:white;
+border:2px solid rgba(255,255,255,0.1);
+}
+
+input::placeholder{
+color:#d0d0d0;
+}
+
+/* GAME OVER */
+
+.gameover{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(0,0,0,0.8);
+padding:40px;
+border-radius:30px;
+text-align:center;
+z-index:50;
+display:none;
+width:90%;
+max-width:500px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 40px rgba(0,0,0,0.5);
+}
+
+.gameover h1{
+font-size:3rem;
+color:#ff5c7c;
+margin-bottom:15px;
+}
+
+.gameover p{
+font-size:1.2rem;
+margin-bottom:25px;
+color:#eee;
+}
+
+.restart,
+.save-btn{
+padding:15px 30px;
+border:none;
+border-radius:16px;
+font-size:1rem;
+font-weight:700;
+cursor:pointer;
+margin:10px;
+}
+
+.restart{
+background:#00ff99;
+}
+
+.save-btn{
+background:#00d9ff;
+}
+
+/* LEVEL UP */
+
+.levelup{
+position:absolute;
+top:120px;
+left:50%;
+transform:translateX(-50%);
+z-index:30;
+font-size:2rem;
+font-weight:700;
+color:#00ff99;
+display:none;
+animation:pop 1s ease;
+}
+
+@keyframes pop{
+0%{
+transform:translateX(-50%) scale(0.5);
+opacity:0;
+}
+100%{
+transform:translateX(-50%) scale(1);
+opacity:1;
+}
+}
+
+/* TABLET */
+
+@media(max-width:1200px){
+
+.left-ads,
+.right-ads{
+display:none;
+}
+
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.top-ads{
+width:320px;
+height:50px;
+font-size:14px;
+}
+
+.ui{
+padding-top:90px;
+}
+
+.center-box{
+top:60%;
+}
+
+.title{
+font-size:2.8rem;
+}
+
+}
+
+/* EXTRA SMALL MOBILE */
+
+@media(max-width:600px){
+
+.top-ads{
+display:none;
+}
+
+.ui{
+padding-top:20px;
+}
+
+.center-box{
+top:50%;
+}
+
+.title{
+font-size:2.2rem;
+}
+
+.subtitle{
+font-size:1rem;
+line-height:1.5rem;
+}
+
+.card{
+min-width:90px;
+padding:12px;
+}
+
+.card h2{
+font-size:1.3rem;
+}
+
+input{
+font-size:1rem;
+padding:15px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ADS -->
+
+<div class="top-ads ads-box">
+📢 TOP GOOGLE ADSENSE
+</div>
+
+<div class="left-ads ads-box">
+📢 LEFT ADS
+</div>
+
+<div class="right-ads ads-box">
+📢 RIGHT ADS
+</div>
+
+<!-- CANVAS -->
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- UI -->
+
+<div class="ui">
+
+<div class="topbar">
+
+<div class="logo">
+⌨️ Type Bubble Rush
+</div>
+
+<div class="stats">
+
+<div class="card">
+Score
+<h2 id="score">0</h2>
+</div>
+
+<div class="card">
+WPM
+<h2 id="wpm">0</h2>
+</div>
+
+<div class="card">
+Level
+<h2 id="level">1</h2>
+</div>
+
+<div class="card">
+Accuracy
+<h2 id="accuracy">100%</h2>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- START MENU -->
+
+<div class="center-box" id="menu">
+
+<div class="title">
+Type Bubble Rush
+</div>
+
+<div class="subtitle">
+Destroy the floating bubbles before they escape!<br>
+Improve typing speed, reflexes & keyboard accuracy.
+</div>
+
+<button class="start-btn" onclick="startGame()">
+▶ START GAME
+</button>
+
+</div>
+
+<!-- INPUT -->
+
+<div class="input-box">
+
+<input
+type="text"
+id="typingInput"
+placeholder="Type bubble word here..."
+autocomplete="off"
+>
+
+</div>
+
+<!-- LEVEL UP -->
+
+<div class="levelup" id="levelup">
+LEVEL UP!
+</div>
+
+<!-- GAME OVER -->
+
+<div class="gameover" id="gameover">
+
+<h1>GAME OVER</h1>
+
+<p id="finalscore">
+Your Score: 0
+</p>
+
+<button class="restart" onclick="restartGame()">
+🔄 Play Again
+</button>
+
+<button class="save-btn" onclick="saveScreenshot()">
+📸 Save Score
+</button>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const input = document.getElementById('typingInput');
+
+const words = [
+
+"cat","dog","sun","jump","speed","power",
+"rocket","magic","typing","fast","keyboard",
+"winner","galaxy","planet","future","neon",
+"storm","dragon","gaming","victory","bubble",
+"challenge","monster","cyber","thunder",
+"legend","energy","battle","phantom"
+
+];
+
+let bubbles = [];
+let score = 0;
+let level = 1;
+let gameRunning = false;
+
+let totalTyped = 0;
+let correctTyped = 0;
+
+let startTime;
+
+let bubbleSpeed = 1;
+
+/* SAFE PLAY AREA */
+
+function getSafeX(){
+
+let minX = 120;
+let maxX = canvas.width - 120;
+
+/* DESKTOP SAFE AREA */
+
+if(window.innerWidth > 1200){
+
+minX = 420;
+maxX = canvas.width - 420;
+
+}
+
+/* TABLET */
+
+else if(window.innerWidth > 900){
+
+minX = 120;
+maxX = canvas.width - 120;
+
+}
+
+/* MOBILE */
+
+else{
+
+minX = 80;
+maxX = canvas.width - 80;
+
+}
+
+return Math.random() * (maxX - minX) + minX;
+
+}
+
+/* SAFE TOP LIMIT */
+
+function getSafeTopLimit(){
+
+if(window.innerWidth <= 600){
+
+return 20;
+
+}
+
+if(window.innerWidth <= 900){
+
+return 80;
+
+}
+
+return 120;
+
+}
+
+class Bubble{
+
+constructor(word){
+
+this.word = word;
+
+this.x = getSafeX();
+
+this.y = canvas.height + 100;
+
+this.radius = 55;
+
+this.speed =
+bubbleSpeed + Math.random();
+
+this.color =
+`hsl(${Math.random()*360},80%,60%)`;
+
+}
+
+draw(){
+
+ctx.beginPath();
+
+ctx.shadowBlur = 25;
+ctx.shadowColor = this.color;
+
+ctx.fillStyle = this.color;
+
+ctx.arc(
+this.x,
+this.y,
+this.radius,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.closePath();
+
+ctx.shadowBlur = 0;
+
+ctx.fillStyle = "#fff";
+
+ctx.font = "bold 22px Poppins";
+
+ctx.textAlign = "center";
+
+ctx.fillText(
+this.word,
+this.x,
+this.y+8
+);
+
+}
+
+update(){
+
+this.y -= this.speed;
+
+}
+
+}
+
+/* SPAWN */
+
+function spawnBubble(){
+
+if(!gameRunning) return;
+
+const word =
+words[Math.floor(Math.random()*words.length)];
+
+bubbles.push(new Bubble(word));
+
+const extra =
+Math.floor(level / 3);
+
+for(let i=0;i<extra;i++){
+
+const w =
+words[Math.floor(Math.random()*words.length)];
+
+bubbles.push(new Bubble(w));
+
+}
+
+}
+
+/* ANIMATION */
+
+function animate(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+const safeTop = getSafeTopLimit();
+
+for(let i=0;i<bubbles.length;i++){
+
+bubbles[i].update();
+
+bubbles[i].draw();
+
+if(bubbles[i].y < safeTop){
+
+gameOver();
+
+}
+
+}
+
+requestAnimationFrame(animate);
+
+}
+
+/* START */
+
+function startGame(){
+
+document.getElementById('menu')
+.style.display='none';
+
+gameRunning = true;
+
+startTime = Date.now();
+
+animate();
+
+spawnBubble();
+
+setInterval(
+spawnBubble,
+2000
+);
+
+}
+
+/* INPUT */
+
+input.addEventListener('input',()=>{
+
+const value =
+input.value.trim();
+
+totalTyped++;
+
+for(let i=0;i<bubbles.length;i++){
+
+if(
+value.toLowerCase()
+===
+bubbles[i].word.toLowerCase()
+){
+
+correctTyped++;
+
+score += 10;
+
+document.getElementById('score')
+.innerText = score;
+
+bubbles.splice(i,1);
+
+input.value='';
+
+updateStats();
+
+checkLevel();
+
+break;
+
+}
+
+}
+
+updateAccuracy();
+
+});
+
+/* STATS */
+
+function updateStats(){
+
+const minutes =
+(Date.now()-startTime)/1000/60;
+
+const wpm =
+Math.round(correctTyped / minutes);
+
+document.getElementById('wpm')
+.innerText =
+isFinite(wpm)?wpm:0;
+
+}
+
+function updateAccuracy(){
+
+const accuracy =
+Math.round(
+(correctTyped/totalTyped)*100
+);
+
+document.getElementById('accuracy')
+.innerText =
+(isFinite(accuracy)?accuracy:100)+'%';
+
+}
+
+/* LEVEL */
+
+function checkLevel(){
+
+const newLevel =
+Math.floor(score/100)+1;
+
+if(newLevel > level){
+
+level = newLevel;
+
+document.getElementById('level')
+.innerText = level;
+
+bubbleSpeed += 0.5;
+
+showLevelUp();
+
+}
+
+}
+
+function showLevelUp(){
+
+const lvl =
+document.getElementById('levelup');
+
+lvl.style.display='block';
+
+setTimeout(()=>{
+lvl.style.display='none';
+},1200);
+
+}
+
+/* GAME OVER */
+
+function gameOver(){
+
+gameRunning = false;
+
+document.getElementById('gameover')
+.style.display='block';
+
+document.getElementById('finalscore')
+.innerText =
+`Your Score: ${score}`;
+
+}
+
+/* RESTART */
+
+function restartGame(){
+
+location.reload();
+
+}
+
+/* SCREENSHOT */
+
+function saveScreenshot(){
+
+html2canvas(document.body).then(canvas=>{
+
+const link =
+document.createElement('a');
+
+link.download =
+'type-bubble-score.png';
+
+link.href =
+canvas.toDataURL();
+
+link.click();
+
+});
+
+}
+
+/* RESIZE */
+
+window.addEventListener('resize',()=>{
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+});
+
+</script>
+
+</body>
+</html>
