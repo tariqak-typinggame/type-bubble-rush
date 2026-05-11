@@ -1,9 +1,28 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Type Bubble Rush</title>
+
+<title>Type Bubble Rush - Free Typing Speed Game & Typing Test Online</title>
+
+<meta name="description" content="Play Type Bubble Rush - a fun free typing speed game to improve typing accuracy, keyboard speed and reflexes. Best typing test game online for kids and adults.">
+
+<meta name="keywords" content="typing game, typing speed test, typing practice, typing speed calculator, keyboard game, fast typing game, typing challenge, free typing game">
+
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#00ffb7">
+
+<link rel="canonical" href="https://masttime.com/">
+
+<meta property="og:title" content="Type Bubble Rush - Free Typing Game">
+<meta property="og:description" content="Play the best typing speed game online and improve keyboard accuracy and typing reflexes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://masttime.com">
+<meta property="og:image" content="https://masttime.com/cover.jpg">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -19,32 +38,42 @@ box-sizing:border-box;
 
 body{
 font-family:'Poppins',sans-serif;
-overflow:hidden;
-background:
-radial-gradient(circle at top,#182848,#0f172a,#020617);
-height:100vh;
+overflow-x:hidden;
+background:radial-gradient(circle at top,#182848,#0f172a,#020617);
+min-height:100vh;
 color:white;
 }
 
-canvas{
-position:absolute;
+.game-wrapper{
+position:relative;
+min-height:100vh;
+padding-bottom:150px;
+}
+
+.canvas-layer{
+position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
+z-index:1;
+pointer-events:none;
 }
 
-/* ADS */
+canvas{
+width:100%;
+height:100%;
+}
 
 .ads-box{
-position:absolute;
+position:fixed;
 background:rgba(255,255,255,0.08);
 border:1px dashed rgba(255,255,255,0.2);
 backdrop-filter:blur(10px);
 border-radius:20px;
 padding:20px;
 text-align:center;
-z-index:20;
+z-index:30;
 color:#fff;
 font-weight:600;
 }
@@ -83,11 +112,14 @@ align-items:center;
 justify-content:center;
 }
 
-/* UI */
-
-.ui{
+.ui,
+.center-box,
+.seo-content{
 position:relative;
 z-index:10;
+}
+
+.ui{
 padding:130px 20px 20px;
 }
 
@@ -99,6 +131,12 @@ background:linear-gradient(to right,#00e5ff,#00ff99);
 -webkit-text-fill-color:transparent;
 text-align:center;
 margin-bottom:20px;
+}
+
+.seo-h1{
+font-size:1px;
+opacity:0;
+position:absolute;
 }
 
 .stats{
@@ -125,17 +163,11 @@ margin-top:5px;
 color:#00ffb7;
 }
 
-/* MENU */
-
 .center-box{
-position:absolute;
-top:55%;
-left:50%;
-transform:translate(-50%,-50%);
-z-index:20;
 text-align:center;
 width:90%;
 max-width:650px;
+margin:120px auto 80px;
 }
 
 .title{
@@ -170,14 +202,12 @@ box-shadow:0 0 25px rgba(0,255,153,0.5);
 transform:scale(1.05);
 }
 
-/* INPUT */
-
 .input-box{
-position:absolute;
+position:fixed;
 bottom:30px;
 left:50%;
 transform:translateX(-50%);
-z-index:20;
+z-index:100;
 width:90%;
 max-width:600px;
 }
@@ -199,10 +229,8 @@ input::placeholder{
 color:#d0d0d0;
 }
 
-/* GAME OVER */
-
 .gameover{
-position:absolute;
+position:fixed;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
@@ -210,7 +238,7 @@ background:rgba(0,0,0,0.8);
 padding:40px;
 border-radius:30px;
 text-align:center;
-z-index:50;
+z-index:200;
 display:none;
 width:90%;
 max-width:500px;
@@ -222,12 +250,6 @@ box-shadow:0 0 40px rgba(0,0,0,0.5);
 font-size:3rem;
 color:#ff5c7c;
 margin-bottom:15px;
-}
-
-.gameover p{
-font-size:1.2rem;
-margin-bottom:25px;
-color:#eee;
 }
 
 .restart,
@@ -249,106 +271,76 @@ background:#00ff99;
 background:#00d9ff;
 }
 
-/* LEVEL */
-
 .levelup{
-position:absolute;
+position:fixed;
 top:120px;
 left:50%;
 transform:translateX(-50%);
-z-index:30;
+z-index:150;
 font-size:2rem;
 font-weight:700;
 color:#00ff99;
 display:none;
-animation:pop 1s ease;
 }
 
-@keyframes pop{
-0%{
-transform:translateX(-50%) scale(0.5);
-opacity:0;
-}
-100%{
-transform:translateX(-50%) scale(1);
-opacity:1;
-}
+.seo-content{
+max-width:1000px;
+margin:700px auto 120px;
+padding:40px;
+background:rgba(255,255,255,0.05);
+border-radius:30px;
+backdrop-filter:blur(10px);
+line-height:1.9rem;
 }
 
-/* TABLET */
+.seo-content h2{
+font-size:2rem;
+margin-bottom:20px;
+margin-top:40px;
+color:#00ffb7;
+}
+
+.seo-content h3{
+margin-top:25px;
+margin-bottom:10px;
+color:#00d9ff;
+}
+
+.seo-content p,
+.seo-content li{
+color:#ddd;
+margin-bottom:15px;
+}
 
 @media(max-width:1200px){
-
 .left-ads,
 .right-ads{
 display:none;
 }
-
 }
-
-/* MOBILE */
-
-@media(max-width:900px){
-
-.top-ads{
-width:320px;
-height:50px;
-font-size:14px;
-}
-
-.ui{
-padding-top:90px;
-}
-
-.title{
-font-size:2.8rem;
-}
-
-}
-
-/* SMALL MOBILE */
 
 @media(max-width:600px){
-
 .top-ads{
 display:none;
 }
 
-.ui{
-padding-top:20px;
-}
-
 .title{
-font-size:2.2rem;
+font-size:2.4rem;
 }
 
-.subtitle{
-font-size:1rem;
-line-height:1.5rem;
+.seo-content{
+padding:25px;
+margin:50px 15px 120px;
 }
-
-.card{
-min-width:90px;
-padding:12px;
-}
-
-.card h2{
-font-size:1.3rem;
-}
-
-input{
-font-size:1rem;
-padding:15px;
-}
-
 }
 
 </style>
+
 </head>
 
 <body>
 
-<!-- ADS -->
+<div class="game-wrapper">
 
 <div class="top-ads ads-box">
 📢 TOP GOOGLE ADSENSE
@@ -362,17 +354,19 @@ padding:15px;
 📢 RIGHT ADS
 </div>
 
-<!-- CANVAS -->
-
+<div class="canvas-layer">
 <canvas id="gameCanvas"></canvas>
-
-<!-- UI -->
+</div>
 
 <div class="ui">
 
 <div class="logo">
 ⌨️ Type Bubble Rush
 </div>
+
+<h1 class="seo-h1">
+Free Typing Speed Game Online
+</h1>
 
 <div class="stats">
 
@@ -400,8 +394,6 @@ Accuracy
 
 </div>
 
-<!-- START -->
-
 <div class="center-box" id="menu">
 
 <div class="title">
@@ -419,42 +411,48 @@ Improve typing speed, reflexes & keyboard accuracy.
 
 </div>
 
-<!-- INPUT -->
-
 <div class="input-box">
-
-<input
-type="text"
-id="typingInput"
-placeholder="Type bubble word here..."
-autocomplete="off"
->
-
+<input type="text" id="typingInput" placeholder="Type bubble word here..." autocomplete="off">
 </div>
-
-<!-- LEVEL -->
 
 <div class="levelup" id="levelup">
 LEVEL UP!
 </div>
 
-<!-- GAME OVER -->
-
 <div class="gameover" id="gameover">
-
 <h1>GAME OVER</h1>
+<p id="finalscore">Your Score: 0</p>
+<button class="restart" onclick="restartGame()">🔄 Play Again</button>
+<button class="save-btn" onclick="saveScreenshot()">📸 Save Score</button>
+</div>
 
-<p id="finalscore">
-Your Score: 0
+<section class="seo-content">
+
+<h2>Improve Your Typing Speed Online</h2>
+<p>
+Type Bubble Rush is a free online typing speed game designed to improve typing accuracy, keyboard speed, finger placement and reflexes.
 </p>
 
-<button class="restart" onclick="restartGame()">
-🔄 Play Again
-</button>
+<h2>Free Typing Game for Kids and Adults</h2>
+<p>
+This typing practice game is perfect for students, gamers and professionals who want to increase typing speed.
+</p>
 
-<button class="save-btn" onclick="saveScreenshot()">
-📸 Save Score
-</button>
+<h2>Typing Speed Test and Keyboard Practice</h2>
+<p>
+Challenge yourself with multiple levels and improve your keyboard reflexes with fun gameplay.
+</p>
+
+<h2>Why Play Type Bubble Rush?</h2>
+<ul>
+<li>Improve typing speed</li>
+<li>Increase keyboard accuracy</li>
+<li>Fun typing challenge game</li>
+<li>Perfect for kids and adults</li>
+<li>Free typing speed test online</li>
+</ul>
+
+</section>
 
 </div>
 
@@ -469,29 +467,20 @@ canvas.height = window.innerHeight;
 const input = document.getElementById('typingInput');
 
 const words = [
-
 "cat","dog","sun","jump","speed","power",
 "rocket","magic","typing","fast","keyboard",
 "winner","galaxy","planet","future","neon",
-"storm","dragon","gaming","victory","bubble",
-"challenge","monster","cyber","thunder",
-"legend","energy","battle","phantom"
-
+"storm","dragon","gaming","victory","bubble"
 ];
 
 let bubbles = [];
 let score = 0;
 let level = 1;
 let gameRunning = false;
-
 let totalTyped = 0;
 let correctTyped = 0;
-
 let startTime;
-
 let bubbleSpeed = 1;
-
-/* SAFE LANES */
 
 const lanes = [];
 
@@ -502,230 +491,94 @@ lanes.length = 0;
 let startX = 120;
 let endX = canvas.width - 120;
 
-/* DESKTOP */
-
 if(window.innerWidth > 1200){
-
 startX = 420;
 endX = canvas.width - 420;
-
 }
-
-/* TABLET */
 
 else if(window.innerWidth > 900){
-
 startX = 140;
 endX = canvas.width - 140;
-
 }
 
-/* MOBILE */
-
 else{
-
 startX = 90;
 endX = canvas.width - 90;
-
 }
 
 const totalLanes = 5;
-
-const laneWidth =
-(endX - startX) / totalLanes;
+const laneWidth = (endX - startX) / totalLanes;
 
 for(let i=0;i<totalLanes;i++){
-
-lanes.push(
-startX + laneWidth * i + laneWidth/2
-);
-
+lanes.push(startX + laneWidth * i + laneWidth/2);
 }
 
 }
 
 generateLanes();
 
-/* SAFE TOP */
-
-function getSafeTopLimit(){
-
-if(window.innerWidth <= 600){
-
-return 20;
-
-}
-
-if(window.innerWidth <= 900){
-
-return 80;
-
-}
-
-return 120;
-
-}
-
-/* BUBBLE */
-
 class Bubble{
 
 constructor(word,x){
-
 this.word = word;
-
 this.x = x;
-
 this.y = canvas.height + 100;
-
 this.radius = 55;
-
-this.speed =
-bubbleSpeed + Math.random();
-
-this.color =
-`hsl(${Math.random()*360},80%,60%)`;
-
+this.speed = bubbleSpeed + Math.random();
+this.color = `hsl(${Math.random()*360},80%,60%)`;
 }
 
 draw(){
-
 ctx.beginPath();
-
 ctx.shadowBlur = 25;
 ctx.shadowColor = this.color;
-
 ctx.fillStyle = this.color;
-
-ctx.arc(
-this.x,
-this.y,
-this.radius,
-0,
-Math.PI*2
-);
-
+ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
 ctx.fill();
-
 ctx.closePath();
-
 ctx.shadowBlur = 0;
-
-ctx.fillStyle = "#fff";
-
-ctx.font = "bold 22px Poppins";
-
-ctx.textAlign = "center";
-
-ctx.fillText(
-this.word,
-this.x,
-this.y+8
-);
-
+ctx.fillStyle = '#fff';
+ctx.font = 'bold 22px Poppins';
+ctx.textAlign = 'center';
+ctx.fillText(this.word,this.x,this.y+8);
 }
 
 update(){
-
 this.y -= this.speed;
-
 }
 
 }
-
-/* SPAWN */
 
 function spawnBubble(){
 
 if(!gameRunning) return;
 
-/* FREE LANES */
-
 const freeLanes = lanes.filter(lane => {
-
 return !bubbles.some(bubble => {
-
-return Math.abs(bubble.x - lane) < 20
-&& Math.abs(bubble.y - canvas.height) < 180;
-
+return Math.abs(bubble.x - lane) < 20 && Math.abs(bubble.y - canvas.height) < 180;
 });
-
 });
 
 if(freeLanes.length === 0) return;
 
-const lane =
-freeLanes[
-Math.floor(Math.random()*freeLanes.length)
-];
+const lane = freeLanes[Math.floor(Math.random()*freeLanes.length)];
+const word = words[Math.floor(Math.random()*words.length)];
 
-const word =
-words[Math.floor(Math.random()*words.length)];
-
-bubbles.push(
-new Bubble(word,lane)
-);
-
-/* EXTRA LEVEL BUBBLES */
-
-const extra =
-Math.floor(level / 3);
-
-for(let i=0;i<extra;i++){
-
-const remainingLanes = lanes.filter(l => {
-
-return !bubbles.some(b => {
-
-return Math.abs(b.x - l) < 20
-&& Math.abs(b.y - canvas.height) < 180;
-
-});
-
-});
-
-if(remainingLanes.length === 0) return;
-
-const randomLane =
-remainingLanes[
-Math.floor(Math.random()*remainingLanes.length)
-];
-
-const w =
-words[Math.floor(Math.random()*words.length)];
-
-bubbles.push(
-new Bubble(w,randomLane)
-);
+bubbles.push(new Bubble(word,lane));
 
 }
-
-}
-
-/* ANIMATION */
 
 function animate(){
 
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-const safeTop =
-getSafeTopLimit();
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
 for(let i=0;i<bubbles.length;i++){
 
 bubbles[i].update();
-
 bubbles[i].draw();
 
-if(bubbles[i].y < safeTop){
-
+if(bubbles[i].y < 80){
 gameOver();
-
 }
 
 }
@@ -734,58 +587,39 @@ requestAnimationFrame(animate);
 
 }
 
-/* START */
-
 function startGame(){
 
-document.getElementById('menu')
-.style.display='none';
+document.getElementById('menu').style.display='none';
 
 gameRunning = true;
-
 startTime = Date.now();
 
 animate();
-
 spawnBubble();
 
-setInterval(
-spawnBubble,
-2000
-);
+setInterval(spawnBubble,2000);
 
 }
 
-/* INPUT */
-
 input.addEventListener('input',()=>{
 
-const value =
-input.value.trim();
+const value = input.value.trim();
 
 totalTyped++;
 
 for(let i=0;i<bubbles.length;i++){
 
-if(
-value.toLowerCase()
-===
-bubbles[i].word.toLowerCase()
-){
+if(value.toLowerCase() === bubbles[i].word.toLowerCase()){
 
 correctTyped++;
-
 score += 10;
 
-document.getElementById('score')
-.innerText = score;
+document.getElementById('score').innerText = score;
 
 bubbles.splice(i,1);
-
 input.value='';
 
 updateStats();
-
 checkLevel();
 
 break;
@@ -798,51 +632,32 @@ updateAccuracy();
 
 });
 
-/* STATS */
-
 function updateStats(){
 
-const minutes =
-(Date.now()-startTime)/1000/60;
+const minutes = (Date.now()-startTime)/1000/60;
+const wpm = Math.round(correctTyped / minutes);
 
-const wpm =
-Math.round(correctTyped / minutes);
-
-document.getElementById('wpm')
-.innerText =
-isFinite(wpm)?wpm:0;
+document.getElementById('wpm').innerText = isFinite(wpm)?wpm:0;
 
 }
 
 function updateAccuracy(){
 
-const accuracy =
-Math.round(
-(correctTyped/totalTyped)*100
-);
+const accuracy = Math.round((correctTyped/totalTyped)*100);
 
-document.getElementById('accuracy')
-.innerText =
-(isFinite(accuracy)?accuracy:100)+'%';
+document.getElementById('accuracy').innerText = (isFinite(accuracy)?accuracy:100)+'%';
 
 }
 
-/* LEVEL */
-
 function checkLevel(){
 
-const newLevel =
-Math.floor(score/100)+1;
+const newLevel = Math.floor(score/100)+1;
 
 if(newLevel > level){
 
 level = newLevel;
-
-document.getElementById('level')
-.innerText = level;
-
+document.getElementById('level').innerText = level;
 bubbleSpeed += 0.5;
-
 showLevelUp();
 
 }
@@ -851,72 +666,48 @@ showLevelUp();
 
 function showLevelUp(){
 
-const lvl =
-document.getElementById('levelup');
+const lvl = document.getElementById('levelup');
 
 lvl.style.display='block';
 
 setTimeout(()=>{
-
 lvl.style.display='none';
-
 },1200);
 
 }
-
-/* GAME OVER */
 
 function gameOver(){
 
 gameRunning = false;
 
-document.getElementById('gameover')
-.style.display='block';
+document.getElementById('gameover').style.display='block';
 
-document.getElementById('finalscore')
-.innerText =
-`Your Score: ${score}`;
+document.getElementById('finalscore').innerText = `Your Score: ${score}`;
 
 }
-
-/* RESTART */
 
 function restartGame(){
-
 location.reload();
-
 }
-
-/* SCREENSHOT */
 
 function saveScreenshot(){
 
 html2canvas(document.body).then(canvas=>{
 
-const link =
-document.createElement('a');
+const link = document.createElement('a');
 
-link.download =
-'type-bubble-score.png';
-
-link.href =
-canvas.toDataURL();
-
+link.download = 'type-bubble-score.png';
+link.href = canvas.toDataURL();
 link.click();
 
 });
 
 }
 
-/* RESIZE */
-
 window.addEventListener('resize',()=>{
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 generateLanes();
-
 });
 
 </script>
