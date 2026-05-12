@@ -167,13 +167,13 @@ color:#00ffb7;
 text-align:center;
 width:90%;
 max-width:650px;
-margin:120px auto 80px;
+margin:50px auto 80px;
 }
 
 .title{
-font-size:4rem;
+font-size:3rem;
 font-weight:700;
-margin-bottom:20px;
+margin-bottom:10px;
 background:linear-gradient(to right,#00e5ff,#00ff99);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
@@ -346,13 +346,13 @@ margin:50px 15px 120px;
 📢 TOP GOOGLE ADSENSE
 </div>
 
-<div class="left-ads ads-box">
+<!--<div class="left-ads ads-box">
 📢 LEFT ADS
-</div>
+</div>-->
 
-<div class="right-ads ads-box">
+<!--<div class="right-ads ads-box">
 📢 RIGHT ADS
-</div>
+</div>-->
 
 <div class="canvas-layer">
 <canvas id="gameCanvas"></canvas>
@@ -470,7 +470,20 @@ const words = [
 "cat","dog","sun","jump","speed","power",
 "rocket","magic","typing","fast","keyboard",
 "winner","galaxy","planet","future","neon",
-"storm","dragon","gaming","victory","bubble"
+"storm","dragon","gaming","victory","bubble",
+"silver","hunter","shadow","blaster","thunder",
+"flaming","charger","monster","gravity","phantom",
+"crystal","warrior","volcano","extreme","rapid",
+"machine","network","quantum","mission","matrix",
+"capture","freedom","airplane","diamond","control",
+"support","upgrade","traffic","science","battery",
+"factory","monster","avenger","samurai","premium",
+"library","journey","builder","digital","plastic",
+"weather","teacher","holiday","football","electric",
+"airdrop","surface","fitness","monster","unknown",
+"counter","balance","process","desktop","respect",
+"general","picture","channel","project","connect",
+"amazing","capture","forward","kingdom","nuclear"
 ];
 
 let bubbles = [];
@@ -523,7 +536,7 @@ constructor(word,x){
 this.word = word;
 this.x = x;
 this.y = canvas.height + 100;
-this.radius = 55;
+this.radius = 80;
 this.speed = bubbleSpeed + Math.random();
 this.color = `hsl(${Math.random()*360},80%,60%)`;
 }
