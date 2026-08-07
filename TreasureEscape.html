@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Treasure Escape</title>
+<style>
+html,body{margin:0;height:100%;background:#08111f;color:#fff;font-family:Arial}
+#ui{display:flex;justify-content:space-between;padding:10px;background:#0d1c34}
+#wrap{display:flex;justify-content:center;align-items:center;height:calc(100% - 52px)}
+canvas{background:#0b1220;border:2px solid #2fd3ff;max-width:95vmin;max-height:95vmin;touch-action:none}
+#msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+background:#0008;font-size:30px;font-weight:bold;visibility:hidden}
+#touch{position:fixed;right:12px;bottom:12px;display:grid;grid-template-columns:60px 60px 60px;gap:4px}
+#touch button{height:60px;font-size:22px}
+@media(min-width:900px){#touch{display:none}}
+</style>
+</head>
+<body>
+<div id="ui">
+<div>Level: <span id="lvl">1</span></div>
+<div>Score: <span id="score">0</span></div>
+<div>Time: <span id="time">60</span></div>
+</div>
+<div id="wrap"><canvas id="c" width="640" height="640"></canvas></div>
+<div id="msg"></div>
+<div id="touch">
+<div></div><button onclick="move(0,-1)">▲</button><div></div>
+<button onclick="move(-1,0)">◀</button><button onclick="move(0,1)">▼</button><button onclick="move(1,0)">▶</button>
+</div>
+<script>
+const cv=c,ctx=cv.getContext('2d');
+let level=1,score=0,timeLeft=60,gridSize=10,cell=64,map=[],gems=[],enemies=[],player={x:0,y:0},exit={x:0,y:0};
+let timer;
+function rnd(n){return Math.floor(Math.random()*n)}
+function makeLevel(){
+ clearInterval(timer);
+ gridSize=Math.min(10+level,24);
+ cell=640/gridSize;
+ map=Array.from({length:gridSize},()=>Array(gridSize).fill(0));
+ for(let y=0;y<gridSize;y++)for(let x=0;x<gridSize;x++){
+   if((x||y)&&(x!=gridSize-1||y!=gridSize-1)&&Math.random()<Math.min(.15+.01*level,.35))map[y][x]=1;
+ }
+ player={x:0,y:0}; exit={x:gridSize-1,y:gridSize-1}; map[0][0]=0; map[exit.y][exit.x]=0;
+ gems=[]; enemies=[];
+ let gc=3+level;
+ while(gems.length<gc){
+   let x=rnd(gridSize),y=rnd(gridSize);
+   if(!map[y][x]&&(x||y)&&(x!=exit.x||y!=exit.y)&&!gems.find(g=>g.x==x&&g.y==y))gems.push({x,y});
+ }
+ let ec=Math.min(1+Math.floor(level/2),8);
+ while(enemies.length<ec){
+   let x=rnd(gridSize),y=rnd(gridSize);
+   if(!map[y][x]&&x>1&&y>1)enemies.push({x,y});
+ }
+ timeLeft=Math.max(25,60-level*2);
+ lvl.textContent=level;
+ scoreEl();
+ timer=setInterval(()=>{
+   time.textContent=--timeLeft;
+   enemies.forEach(e=>{
+     let dirs=[[1,0],[-1,0],[0,1],[0,-1]].sort(()=>Math.random()-.5);
+     dirs.sort((a,b)=> (Math.abs((e.x+a[0])-player.x)+Math.abs((e.y+a[1])-player.y))-(Math.abs((e.x+b[0])-player.x)+Math.abs((e.y+b[1])-player.y)));
+     for(let d of dirs){
+       let nx=e.x+d[0],ny=e.y+d[1];
+       if(nx>=0&&ny>=0&&nx<gridSize&&ny<gridSize&&!map[ny][nx]){e.x=nx;e.y=ny;break;}
+     }
+     if(e.x==player.x&&e.y==player.y)lose("Caught by enemy!");
+   });
+   if(timeLeft<=0)lose("Time Up!");
+   draw();
+ },700-Math.min(level*15,400));
+ draw();
+}
+function scoreEl(){scoreSpan.textContent=score}
+const scoreSpan=document.getElementById("score");
+function move(dx,dy){
+ let nx=player.x+dx,ny=player.y+dy;
+ if(nx<0||ny<0||nx>=gridSize||ny>=gridSize||map[ny][nx])return;
+ player.x=nx;player.y=ny;
+ let i=gems.findIndex(g=>g.x==nx&&g.y==ny);
+ if(i>-1){gems.splice(i,1);score+=100;scoreEl();}
+ if(enemies.some(e=>e.x==nx&&e.y==ny))lose("Caught by enemy!");
+ if(nx==exit.x&&ny==exit.y&&gems.length==0){
+   score+=500+timeLeft*10;level++;
+   localStorage.best=Math.max(+localStorage.best||0,score);
+   flash("Level Complete!");
+   setTimeout(makeLevel,800);
+ }
+ draw();
+}
+function lose(t){
+ clearInterval(timer);
+ localStorage.best=Math.max(+localStorage.best||0,score);
+ flash(t+"<br>Best: "+(localStorage.best||0)+"<br>Restarting...");
+ setTimeout(()=>{level=1;score=0;makeLevel();},1800);
+}
+function flash(t){msg.innerHTML=t;msg.style.visibility="visible";setTimeout(()=>msg.style.visibility="hidden",700)}
+document.addEventListener("keydown",e=>{
+ if(e.key=="ArrowUp"||e.key=="w")move(0,-1);
+ if(e.key=="ArrowDown"||e.key=="s")move(0,1);
+ if(e.key=="ArrowLeft"||e.key=="a")move(-1,0);
+ if(e.key=="ArrowRight"||e.key=="d")move(1,0);
+});
+function draw(){
+ ctx.clearRect(0,0,640,640);
+ for(let y=0;y<gridSize;y++)for(let x=0;x<gridSize;x++){
+   ctx.fillStyle=map[y][x]?"#234":"#0d2747";
+   ctx.fillRect(x*cell,y*cell,cell-1,cell-1);
+ }
+ ctx.fillStyle="#ffd700";
+ gems.forEach(g=>{ctx.beginPath();ctx.arc((g.x+.5)*cell,(g.y+.5)*cell,cell*.18,0,7);ctx.fill();});
+ ctx.fillStyle="#ff4040";
+ enemies.forEach(e=>ctx.fillRect(e.x*cell+cell*.2,e.y*cell+cell*.2,cell*.6,cell*.6));
+ ctx.fillStyle="#34ff7d";
+ ctx.fillRect(player.x*cell+cell*.15,player.y*cell+cell*.15,cell*.7,cell*.7);
+ ctx.strokeStyle="#00e5ff";ctx.lineWidth=3;
+ ctx.strokeRect(exit.x*cell+4,exit.y*cell+4,cell-8,cell-8);
+ time.textContent=timeLeft;
+}
+makeLevel();
+</script>
+</body>
+</html>
